@@ -1,7 +1,9 @@
-# FROM dhpcontainreg.azurecr.io/dhpcore/python:3.7-alpine3.7
-FROM python:3.6
-RUN apt-get update
-RUN apt-get install gcc
+FROM dhpcontainreg.azurecr.io/dhpcore/python:3.7-alpine3.7
+# FROM python:3.6
+RUN apk update
+RUN apk add build-base
+# RUN apk add gcc
+# RUN apt-get install gcc
 WORKDIR /code
 ADD . /code
 RUN ls -alFrt
