@@ -7,7 +7,7 @@ try:
 except: ImportError:\
     logging.info("Error importing py_zipkin package")
 from flask_restplus import Api, Resource
-import requests
+import requests, sys
 from model.response import resp_resource
 from model.req_parser_model import MemberName_schema
 from name_normalization.dhp_nameparser import name_normalization
@@ -30,15 +30,18 @@ def http_transport(encoded_span):
         headers={'Content-Type': 'application/x-thrift'},
     )
 
+bad_req_msg = "Required field 'name' is missing"
+bad_data_msg = "Missing data for field 'name' cannot be null"
+
 
 def process_req(req_payload):
     # logging.info(f"request received {req_payload}")
     if len(req_payload.errors) > 0:
         logging.info(f"Bad request received, json element 'name' missing in request")
-        return {'error': "Required field 'name' is missing"}, 406
+        return {'error': bad_req_msg} #, 406
     elif len(req_payload.data['name']) == 0 or len(req_payload.data['name']) is None:
         logging.info(f"No value supplied for tag name")
-        return {'error': "Missing data for field 'name' cannot be null"}, 400
+        return {'error': bad_data_msg} #, 400
     out_name = name_normalization(req_payload.data['name'])
     logging.info(f"Respone: {out_name}")
     return out_name
@@ -81,7 +84,14 @@ class Index(Resource):
         except (KeyError, NameError)as err:
             logging.info(err)
             resp_out = process_req(req_payload)
-        return resp_out, 201
+        resp_keys = resp_out.keys()
+        if 'name' in resp_keys:
+            return resp_out, 201
+        elif resp_out['error'] == bad_data_msg:
+            return resp_out, 406
+        else:
+            return resp_out, 401
+
 
 
 if __name__ == '__main__':
