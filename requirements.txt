@@ -1,0 +1,5 @@
+requests==2.18.4
+py_zipkin==0.11.0
+Flask==0.12.2
+marshmallow==2.15.4
+flask_restplus==0.10.1
