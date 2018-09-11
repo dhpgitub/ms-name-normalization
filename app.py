@@ -1,3 +1,5 @@
+from  urllib3.exceptions import NewConnectionError, MaxRetryError
+from  urllib3.connection import HTTPConnection
 from flask import Flask, request
 
 import logging
@@ -56,32 +58,21 @@ class Index(Resource):
         logging.info(f"request received {req_payload}")
         try:
             with zipkin_span(
-                    service_name='service1',
+                    service_name=app_name,
                     zipkin_attrs=ZipkinAttrs(
-                        trace_id=request.headers['X-B3-TraceID'],
-                        span_id=request.headers['X-B3-SpanID'],
-                        parent_span_id=request.headers['X-B3-ParentSpanID'],
-                        flags=request.headers['X-B3-Flags'],
-                        is_sampled=request.headers['X-B3-Sampled'],
+                        trace_id=request.headers.get('X-B3-TraceID',None),
+                        span_id=request.headers.get('X-B3-SpanID',None),
+                        parent_span_id=request.headers.get('X-B3-ParentSpanID',None),
+                        flags=request.headers.get('X-B3-Flags',None),
+                        is_sampled=request.headers.get('X-B3-Sampled',None),
                     ),
-                    span_name='index_service1',
+                    span_name='normalize',
                     transport_handler=http_transport,
-                    port=6000,
+                    port=5000,
                     sample_rate=100,  # 0.05, # Value between 0.0 and 100.0
             ):
                 resp_out = process_req(req_payload)
-        except (KeyError, NameError, ConnectionError, ConnectionRefusedError)as err:
-            logging.info(err)
-        try:
-            with zipkin_span(
-                    service_name='service1',
-                    span_name='index_service1',
-                    transport_handler=http_transport,
-                    port=6000,
-                    sample_rate=100,  # 0.05, # Value between 0.0 and 100.0
-            ):
-                resp_out = process_req(req_payload)
-        except (KeyError, NameError, ConnectionError, ConnectionRefusedError)as err:
+        except (KeyError, NameError, ConnectionError, ConnectionRefusedError, NewConnectionError, MaxRetryError)as err:
             logging.info(err)
             resp_out = process_req(req_payload)
         resp_keys = resp_out.keys()
@@ -91,6 +82,7 @@ class Index(Resource):
             return resp_out, 406
         else:
             return resp_out, 400
+
 
 
 if __name__ == '__main__':
