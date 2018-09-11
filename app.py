@@ -1,5 +1,5 @@
 from  urllib3.exceptions import NewConnectionError, MaxRetryError
-from  urllib3.connection import HTTPConnection
+from requests.exceptions import ConnectionError
 from flask import Flask, request
 
 import logging
@@ -82,7 +82,6 @@ class Index(Resource):
             return resp_out, 406
         else:
             return resp_out, 400
-
 
 
 if __name__ == '__main__':
