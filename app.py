@@ -70,7 +70,7 @@ class Index(Resource):
                     sample_rate=100,  # 0.05, # Value between 0.0 and 100.0
             ):
                 resp_out = process_req(req_payload)
-        except (KeyError, NameError)as err:
+        except (KeyError, NameError, ConnectionError, ConnectionRefusedError)as err:
             logging.info(err)
         try:
             with zipkin_span(
@@ -81,7 +81,7 @@ class Index(Resource):
                     sample_rate=100,  # 0.05, # Value between 0.0 and 100.0
             ):
                 resp_out = process_req(req_payload)
-        except (KeyError, NameError)as err:
+        except (KeyError, NameError, ConnectionError, ConnectionRefusedError)as err:
             logging.info(err)
             resp_out = process_req(req_payload)
         resp_keys = resp_out.keys()
@@ -90,8 +90,7 @@ class Index(Resource):
         elif resp_out['error'] == bad_data_msg:
             return resp_out, 406
         else:
-            return resp_out, 401
-
+            return resp_out, 400
 
 
 if __name__ == '__main__':
