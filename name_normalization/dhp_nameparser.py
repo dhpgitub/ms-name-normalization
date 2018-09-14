@@ -1,14 +1,16 @@
 from name_normalization import config
 from model.req_parser_model import MemberName_schema, MemberName
 
+suff = config.suffixs.split("*")
+
 def name_normalization(org_name):
     name = org_name.upper()
+    for suffix in suff:
+        if suffix in name:
+            name = name.replace(suffix, " ")
     for special_char in config.special_chars:
         if special_char in name:
             name = name.replace(special_char, "")
-    for suffixe in config.suffixes:
-        if suffixe in name:
-            name = name.replace(suffixe, "")
     if name == org_name.upper():
         status = 'UNCHANGED'
     else:
