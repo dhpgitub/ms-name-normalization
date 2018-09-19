@@ -1,7 +1,6 @@
-FROM dhpcontainreg.azurecr.io/dhpcore/python:3.7-alpine3.7
+FROM dhpcontainreg.azurecr.io/core-image/python:3.6
 WORKDIR /code
 ADD . /code
-RUN ls -alFrt
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 ENTRYPOINT ["python"]
