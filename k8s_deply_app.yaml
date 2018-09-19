@@ -18,10 +18,9 @@ spec:
     spec:
       containers:
       - name: ms-name-normalization
-        image: dhpcontainreg.azurecr.io/dhpcore-utility/pynamenormalization:v1
+        image: dhpcontainreg.azurecr.io/core-utility/namenormalization:v1
         imagePullPolicy: Always
         ports:
           - containerPort: 5000
-        command: ["python"]
         args: ["app.py", "-Xapp_name=ms-name-normalization", "-XZipkinURL=http://40.122.105.94:9411/api/v1/spans"]
       restartPolicy: Always
