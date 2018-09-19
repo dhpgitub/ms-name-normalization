@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-name-normalization
+  labels:
+    app: ms-name-normalization
+    registerWithMesh: "true"
+spec:
+  type: LoadBalancer
+
+  ports:
+  - name: operations
+    port: 5000
+    targetPort: 5000
+    nodePort: 31250
+
+  selector:
+    app: ms-name-normalization

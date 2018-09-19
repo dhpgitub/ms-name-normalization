@@ -34,18 +34,19 @@ def http_transport(encoded_span):
 
 bad_req_msg = "Required field 'name' is missing"
 bad_data_msg = "Missing data for field 'name' cannot be null"
-
+traceID = None
+spanID = None
 
 def process_req(req_payload):
     # logging.info(f"request received {req_payload}")
     if len(req_payload.errors) > 0:
-        logging.info(f"Bad request received, json element 'name' missing in request")
+        logging.info(f"traceID: {request.headers.get('X-B3-TraceID',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, Bad request received, json element 'name' missing in request")
         return {'error': bad_req_msg} #, 406
     elif len(req_payload.data['name']) == 0 or len(req_payload.data['name']) is None:
-        logging.info(f"No value supplied for tag name")
+        logging.info(f"traceID: {request.headers.get('X-B3-TraceID',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, No value supplied for tag name")
         return {'error': bad_data_msg} #, 400
     out_name = name_normalization(req_payload.data['name'])
-    logging.info(f"Respone: {out_name}")
+    logging.info(f"traceID: {request.headers.get('X-B3-TraceID',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, Respone: {out_name}")
     return out_name
 
 
@@ -55,7 +56,7 @@ class Index(Resource):
     def post(self):
         mem_name_schema = MemberName_schema()
         req_payload = mem_name_schema.load(api.payload)
-        logging.info(f"request received {req_payload}")
+        logging.info(f"traceID: {request.headers.get('X-B3-TraceID',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, request received {req_payload}")
         try:
             with zipkin_span(
                     service_name=app_name,
@@ -73,7 +74,7 @@ class Index(Resource):
             ):
                 resp_out = process_req(req_payload)
         except (KeyError, NameError, ConnectionError, ConnectionRefusedError, NewConnectionError, MaxRetryError)as err:
-            logging.info(err)
+            logging.info(f"traceID: {request.headers.get('X-B3-TraceID',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, {err}")
             resp_out = process_req(req_payload)
         resp_keys = resp_out.keys()
         if 'name' in resp_keys:
