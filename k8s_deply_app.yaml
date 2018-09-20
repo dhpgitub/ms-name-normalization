@@ -22,5 +22,6 @@ spec:
         imagePullPolicy: Always
         ports:
           - containerPort: 5000
+            name: pymainport
         args: ["app.py", "-Xapp_name=ms-name-normalization", "-XZipkinURL=http://40.122.105.94:9411/api/v1/spans"]
       restartPolicy: Always
