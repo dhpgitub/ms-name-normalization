@@ -12,7 +12,6 @@ spec:
   - name: operations
     port: 5000
     targetPort: 5000
-    nodePort: 31250
 
   selector:
     app: ms-name-normalization
