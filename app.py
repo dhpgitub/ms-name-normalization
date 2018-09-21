@@ -9,18 +9,20 @@ try:
 except: ImportError:\
     logging.info("Error importing py_zipkin package")
 from flask_restplus import Api, Resource
-import requests, sys
+import requests, sys, os
 from model.response import resp_resource
 from model.req_parser_model import MemberName_schema
 from name_normalization.dhp_nameparser import name_normalization
 
-app_name = sys._xoptions.get("app_name",'ms-name-normalization')
-ZipkinURL = sys._xoptions.get("ZipkinURL",'http://localhost:9411/api/v1/spans')
-
+# Look of runtime arguments
+app_name = os.environ.get("app_name",'ms-name-normalization')
+ZipkinURL = os.environ.get("ZipkinURL",'http://localhost:9411/api/v1/spans')
+doc_switch = os.environ.get("doc", None)
 app = Flask(__name__)
 api = Api(app, version="v1", title="Name Normalization Service", description="This service removes prefixes, suffixes "
                                                                              "and special character from a peron "
                                                                              "name", default="Name Normalization",
+          doc='/Swagger-UI.html' if doc_switch else False,
           default_mediatype="aplication/json")
 req_post = api.model('post_req', resp_resource)
 
@@ -55,6 +57,8 @@ class Index(Resource):
     @api.expect(req_post)
     def post(self):
         mem_name_schema = MemberName_schema()
+        if (api.payload is None):
+            return {"error": "received empty payload"}, 400
         req_payload = mem_name_schema.load(api.payload)
         logging.info(f"traceID: {request.headers.get('X-B3-TraceID',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, request received {req_payload}")
         try:
@@ -88,7 +92,6 @@ class Index(Resource):
 class Index(Resource):
     def get(self):
         return {"status": "success"}, 200
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=False)
