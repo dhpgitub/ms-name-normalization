@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: ms-name-normalization
-        image: dhpcontainreg.azurecr.io/dhpcore-utility/pynamenormalization:v1
+        image: dhpcontainreg.azurecr.io/core-utility/namenormalization:v1
         imagePullPolicy: Always
         ports:
           - containerPort: 5000
