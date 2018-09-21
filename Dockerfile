@@ -1,7 +1,6 @@
 FROM dhpcontainreg.azurecr.io/core-image/python:3.6
-WORKDIR /code
 RUN git clone https://github.com/dhpgitub/ms-name-normalization.git
-RUN ls -alFrt
+WORKDIR /ms-name-normalization
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 ENTRYPOINT ["python"]
