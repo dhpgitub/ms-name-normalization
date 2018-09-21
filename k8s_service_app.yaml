@@ -6,12 +6,11 @@ metadata:
     app: ms-name-normalization
     registerWithMesh: "true"
 spec:
-  type: LoadBalancer
-
+  type: NodePort
   ports:
-  - name: operations
+  - name: all-ops
     port: 5000
-    targetPort: 5000
+    targetPort: "pymainport"
 
   selector:
     app: ms-name-normalization
