@@ -61,14 +61,14 @@ class Index(Resource):
             return {"error": "received empty payload"}, 400
         req_payload = mem_name_schema.load(api.payload)
         logging.info(f"header info: {request.headers}")
-        logging.info(f"traceID: {request.headers.get('X-B3-TraceID',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, request received {req_payload}")
+        logging.info(f"traceID: {request.headers.get('L5D-Ctx-Trace',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, request received {req_payload}")
         try:
             with zipkin_span(
                     service_name=app_name,
                     zipkin_attrs=ZipkinAttrs(
-                        trace_id=request.headers.get('X-B3-TraceID',None),
+                        trace_id=request.headers.get('L5D-Ctx-Trace',None) if request.headers.get('X-B3-TraceID',None) else request.headers.get('X-B3-TraceID',None),
                         span_id=request.headers.get('X-B3-SpanID',None),
-                        parent_span_id= request.headers.get('X-B3-ParentSpanID',None) if request.headers.get('X-B3-ParentSpanID',None) else request.headers.get('L5D-Ctx-Trace',None),
+                        parent_span_id=request.headers.get('L5D-Ctx-Trace',None) if request.headers.get('X-B3-ParentSpanID',None) else request.headers.get('X-B3-ParentSpanID',None),
                         flags=request.headers.get('X-B3-Flags',None),
                         is_sampled=request.headers.get('X-B3-Sampled',None),
                     ),
@@ -79,7 +79,7 @@ class Index(Resource):
             ):
                 resp_out = process_req(req_payload)
         except (KeyError, NameError, ConnectionError, ConnectionRefusedError, NewConnectionError, MaxRetryError)as err:
-            logging.info(f"traceID: {request.headers.get('X-B3-TraceID',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, {err}")
+            logging.info(f"traceID: {request.headers.get('L5D-Ctx-Trace',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, {err}")
             resp_out = process_req(req_payload)
         resp_keys = resp_out.keys()
         if 'name' in resp_keys:
