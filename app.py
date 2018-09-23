@@ -60,6 +60,7 @@ class Index(Resource):
         if (api.payload is None):
             return {"error": "received empty payload"}, 400
         req_payload = mem_name_schema.load(api.payload)
+        logging.info(f"header info: {request.headers}")
         logging.info(f"traceID: {request.headers.get('X-B3-TraceID',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, request received {req_payload}")
         try:
             with zipkin_span(
