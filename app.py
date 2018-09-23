@@ -61,14 +61,14 @@ class Index(Resource):
             return {"error": "received empty payload"}, 400
         req_payload = mem_name_schema.load(api.payload)
         logging.info(f"header info: {request.headers}")
-        logging.info(f"traceID: {request.headers.get('L5D-Ctx-Trace',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, request received {req_payload}")
+        logging.info(f"traceID: {request.headers.get('L5D-Ctx-TraceX-B3-TraceID',None) if request.headers.get('X-B3-TraceID',None) else request.headers.get('L5D-Ctx-Trace',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, request received {req_payload}")
         try:
             with zipkin_span(
                     service_name=app_name,
                     zipkin_attrs=ZipkinAttrs(
-                        trace_id=request.headers.get('L5D-Ctx-Trace',None) if request.headers.get('X-B3-TraceID',None) else request.headers.get('X-B3-TraceID',None),
+                        trace_id=request.headers.get('L5D-Ctx-TraceX-B3-TraceID',None) if request.headers.get('X-B3-TraceID',None) else request.headers.get('L5D-Ctx-Trace',None),
                         span_id=request.headers.get('X-B3-SpanID',None),
-                        parent_span_id=request.headers.get('L5D-Ctx-Trace',None) if request.headers.get('X-B3-ParentSpanID',None) else request.headers.get('X-B3-ParentSpanID',None),
+                        parent_span_id=request.headers.get('X-B3-ParentSpanID',None) if request.headers.get('X-B3-ParentSpanID',None) else request.headers.get('L5D-Ctx-Trace',None),
                         flags=request.headers.get('X-B3-Flags',None),
                         is_sampled=request.headers.get('X-B3-Sampled',None),
                     ),
