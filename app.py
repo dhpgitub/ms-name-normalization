@@ -68,7 +68,7 @@ class Index(Resource):
                     zipkin_attrs=ZipkinAttrs(
                         trace_id=request.headers.get('X-B3-TraceID',None),
                         span_id=request.headers.get('X-B3-SpanID',None),
-                        parent_span_id=request.headers.get('L5D-Ctx-TraceX-B3-TraceID',None) if request.headers.get('X-B3-ParentSpanID',None) else request.headers.get('X-B3-ParentSpanID',None),
+                        parent_span_id=request.headers.get('L5D-Ctx-Trace',None) if request.headers.get('X-B3-ParentSpanID',None) else request.headers.get('X-B3-ParentSpanID',None),
                         flags=request.headers.get('X-B3-Flags',None),
                         is_sampled=request.headers.get('X-B3-Sampled',None),
                     ),
