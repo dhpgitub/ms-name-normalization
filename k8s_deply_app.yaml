@@ -23,8 +23,8 @@ spec:
         ports:
           - containerPort: 5000
             name: pymainport
-        command: ["python"]
-        args: ["app.py"]
+#         command: ["python"]
+#         args: ["app.py"]
         env:
           - name: app_name
             value: "ms-name-normalization"
