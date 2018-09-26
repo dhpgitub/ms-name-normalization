@@ -4,11 +4,11 @@ WORKDIR /ms-name-normalization
 RUN pip install --upgrade pip
 RUN pip install virtualenv
 RUN virtualenv ms-name-normalization
-RUN du
-RUN pip install -r requirements.txt
+RUN ms-name-normalization/bin/pip install -r requirements.txt
+
 FROM dhpcontainreg.azurecr.io/core-image/python:3.7-alpine3.7
 WORKDIR /ms-name-normalization
 COPY --from=build /ms-name-normalization /ms-name-normalization
-ENTRYPOINT ["python"]
+ENTRYPOINT ["ms-name-normalization/bin/python"]
 # set env var ZipkinURL=http://localhost:9411/api/v1/spans and app_name=ms-name-normalization
 CMD ["app.py"] 
