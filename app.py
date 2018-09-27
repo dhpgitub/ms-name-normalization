@@ -58,7 +58,7 @@ class Index(Resource):
     def post(self):
         mem_name_schema = MemberName_schema()
         if (api.payload is None):
-            return {"error": "received empty payload"}, 400, {'L5D-Ctx-Trace', request.headers.get('L5D-Ctx-Trace',None)}
+            return {"error": "received empty payload"}
         req_payload = mem_name_schema.load(api.payload)
         logging.info(f"header info: {request.headers}")
         logging.info(f"traceID: {request.headers.get('L5D-Ctx-TraceX-B3-TraceID',None) if request.headers.get('X-B3-TraceID',None) else request.headers.get('L5D-Ctx-Trace',None)}, SpanID: {request.headers.get('X-B3-SpanID',None)}, request received {req_payload}")
@@ -83,11 +83,11 @@ class Index(Resource):
             resp_out = process_req(req_payload)
         resp_keys = resp_out.keys()
         if 'name' in resp_keys:
-            return resp_out, 201, {'L5D-Ctx-Trace', request.headers.get('L5D-Ctx-Trace',None)}
+            return resp_out, 201
         elif resp_out['error'] == bad_data_msg:
-            return resp_out, 406, {'L5D-Ctx-Trace', request.headers.get('L5D-Ctx-Trace',None)}
+            return resp_out, 406
         else:
-            return resp_out, 400, {'L5D-Ctx-Trace', request.headers.get('L5D-Ctx-Trace',None)}
+            return resp_out, 400
 
 @api.route('/health')
 class Index(Resource):
