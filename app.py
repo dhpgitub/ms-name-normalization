@@ -14,7 +14,7 @@ from model.response import resp_resource
 from model.req_parser_model import MemberName_schema
 from name_normalization.dhp_nameparser import name_normalization
 
-# Look of runtime arguments
+# Look of runtime arguments 
 app_name = os.environ.get("app_name",'ms-name-normalization')
 ZipkinURL = os.environ.get("ZipkinURL",'http://localhost:9411/api/v1/spans')
 doc_switch = os.environ.get("doc", None)
