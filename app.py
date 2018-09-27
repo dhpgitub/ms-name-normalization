@@ -83,7 +83,7 @@ class Index(Resource):
             resp_out = process_req(req_payload)
         resp_keys = resp_out.keys()
         if 'name' in resp_keys:
-            return resp_out, 201
+            return resp_out, 201, {'L5D-Ctx-Trace': request.headers.get('L5D-Ctx-Trace',None)}
         elif resp_out['error'] == bad_data_msg:
             return resp_out, 406
         else:
