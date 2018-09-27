@@ -20,6 +20,8 @@ spec:
       - name: ms-name-normalization
         image: dhpcontainreg.azurecr.io/core-utility/namenormalization:v1
         imagePullPolicy: Always
+        securityContext:
+          runAsUser: 0
         ports:
           - containerPort: 5000
             name: pymainport
