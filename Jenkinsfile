@@ -6,7 +6,7 @@ DeclarativePythonDockerTemplate{
     hostPort = "9200"
     projectName = "ms-name-normalization"
     automatatedTest = false
-    emailAdd = "Jamie.Kruser@deancare.com"
+    emailAdd = "amit.chaudhary@deancare.com"
     emailFlag = true
 	repo = "dhptest-image"
 	versionNum = "1.0"
