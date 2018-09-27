@@ -1,14 +1,11 @@
-FROM dhpcontainreg.azurecr.io/core-image/python:3.6 as build
-RUN git clone https://github.com/dhpgitub/ms-name-normalization.git
+FROM dhpcontainreg.azurecr.io/core-image/python:3.6-alpine3.8
+RUN apk add --no-cache --virtual .build-deps bash git openssh && \
+    git clone https://github.com/dhpgitub/ms-name-normalization.git && \
+    apk del .build-deps
 WORKDIR /ms-name-normalization
-RUN pip install --upgrade pip
-RUN pip install virtualenv
-RUN virtualenv ms-name-normalization
-RUN ms-name-normalization/bin/pip install -r requirements.txt
-
-FROM dhpcontainreg.azurecr.io/core-image/python:3.7-alpine3.7
-COPY --from=build /ms-name-normalization /ms-name-normalization
-WORKDIR /ms-name-normalization
-ENTRYPOINT ["ms-name-normalization/bin/python"]
+RUN apk add --no-cache --virtual .build-deps build-base && \
+    pip install --no-cache-dir  -r requirements.txt && \
+    apk del .build-deps
+ENTRYPOINT ["python3"]
 # set env var ZipkinURL=http://localhost:9411/api/v1/spans and app_name=ms-name-normalization
-CMD ["app.py"] 
+CMD ["app.py"]
