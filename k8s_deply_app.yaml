@@ -29,7 +29,7 @@ spec:
           - name: app_name
             value: "ms-name-normalization"
           - name:  ZipkinURL
-            value:  "http://40.122.105.94:9411/api/v1/spans"
+            value:  "http://servicemesh-zipkin:9411/api/v1/spans"
           - name: doc
             value: "yes"
       restartPolicy: Always
