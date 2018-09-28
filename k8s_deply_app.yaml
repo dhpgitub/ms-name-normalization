@@ -20,6 +20,8 @@ spec:
       - name: ms-name-normalization
         image: dhpcontainreg.azurecr.io/core-utility/namenormalization:v1
         imagePullPolicy: Always
+        securityContext:
+          runAsUser: 1000
         ports:
           - containerPort: 5000
             name: pymainport
@@ -29,7 +31,7 @@ spec:
           - name: app_name
             value: "ms-name-normalization"
           - name:  ZipkinURL
-            value:  "http://40.122.105.94:9411/api/v1/spans"
+            value:  "http://168.61.180.63:9411/api/v1/spans"
           - name: doc
             value: "yes"
       restartPolicy: Always
