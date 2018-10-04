@@ -4,7 +4,6 @@ metadata:
   name: ms-name-normalization
   labels:
     app: ms-name-normalization
-  namespace: default
 #    registerWithMesh: true
 
 spec:
