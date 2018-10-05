@@ -92,7 +92,7 @@ class Index(Resource):
 @api.route('/health')
 class Index(Resource):
     def get(self):
-        return {"status": "success"}, 200
+        return {"status": "UP"}, 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=False)
