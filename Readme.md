@@ -1,5 +1,5 @@
 # MS-NAME-NORMALIZATION
-
+ 
 This services is written using python flask module that does name normalization i.e. remove below listed suffixes and special character if present in name received in request.
 
 * `suffixs`: [ DR* ESQ* JR* MD* MRS* MS* PHD* REV* RN* SR* V*,DR*,ESQ*,JR*,MD*,MRS*,MS*,PHD*,REV*,RN*,SR*,V*/DR*/ESQ*/JR*/MD*/MRS*/MS*/PHD*/REV*/RN*/SR*/V* IV*,IV*/IV* III*,III*/III* II*,II*/II* I*,I*/I* MR*,MR*/MR"]
