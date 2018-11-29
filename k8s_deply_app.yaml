@@ -4,7 +4,7 @@ metadata:
   name: ms-name-normalization
   labels:
     app: ms-name-normalization
-    registerWithMesh: true
+#     registerWithMesh: true
 
 spec:
   selector:
